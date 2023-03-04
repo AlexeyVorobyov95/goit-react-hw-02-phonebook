@@ -1,28 +1,33 @@
-import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
-import { Button, Item, List, Span } from './ContactsList.styled';
+import { nanoid } from 'nanoid';
+import { ContactsItem } from './ContactsItem';
+import { List} from './ContactsList.styled';
 
 export const ContactsList = ({ contacts, onDeleteContact }) => {
   return (
-    <List>
-      <h2>Contacts</h2>
-      {contacts.length === 0 && (
-        <p>The phonebook is empty. Please add a contact.</p>
-      )}
-      {contacts.map(({ name, number, id }) => (
-        <Item key={nanoid()} id={id} nama={name}>
-          <Span>{name}</Span>
-          {number}
-          <Button onClick={() => onDeleteContact(id)} type="button">
-            Delete contact
-          </Button>
-        </Item>
-      ))}
-    </List>
+    <>
+      <List>
+        {contacts.map(({ name, number, id }) => (
+          <ContactsItem
+            key={nanoid()}
+            name={name}
+            number={number}
+            id={id}
+            deleteButton={onDeleteContact}
+          />
+        ))}
+      </List>
+    </>
   );
 };
 
 ContactsList.propTypes = {
-  contacts: PropTypes.array,
   onDeleteContact: PropTypes.func.isRequired,
+  contacts: PropTypes.arrayOf(
+    PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    }).isRequired
+  ).isRequired,
 };

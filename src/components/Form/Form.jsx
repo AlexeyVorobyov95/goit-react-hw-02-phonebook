@@ -21,6 +21,12 @@ export class ContactForm extends Component {
     });
   };
 
+  clearStateName = () => {
+    this.setState({
+      name: '',
+    });
+  };
+
   render() {
     const { name, number } = this.state;
     return (
@@ -56,8 +62,12 @@ start with +"
           <Button
             type="button"
             onClick={() => {
-              this.props.addContact(name, number);
-              this.clearState();
+              this.props.addContact(
+                name,
+                number,
+                this.clearState,
+                this.clearStateName
+              );
             }}
           >
             Add contact

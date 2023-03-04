@@ -4,7 +4,7 @@ import { GlobalStyles } from 'components/GlobalStyles';
 import { ContactsList } from 'components/Contacts/ContactsList';
 import { ContactForm } from 'components/Form/Form';
 import { Filter } from 'components/Filter/Filter';
-import { ContainerPhoneBook } from 'components/App/App.styled';
+import { ContainerPhoneBook, Title, Text } from 'components/App/App.styled';
 
 export class App extends Component {
   state = {
@@ -12,21 +12,25 @@ export class App extends Component {
     filter: '',
   };
 
-  addContact = (name, number) => {
+  addContact = (name, number, clearState, clearStateName) => {
     let normalizedName = name.toLowerCase();
     if (
       this.state.contacts.find(
         contact => contact.name.toLowerCase() === normalizedName
       )
     ) {
+      clearStateName()
       return alert(`${name} is already in contacts.`);
     }
+
     this.setState(({ contacts }) => {
       let id = contacts.length + 1;
+      clearState();
       return {
         contacts: [...contacts, { id, name, number }],
       };
     });
+    
   };
 
   handleFilterChange = e => {
@@ -52,7 +56,7 @@ export class App extends Component {
   };
 
   render() {
-    const { filter } = this.state;
+    const { filter, contacts } = this.state;
     const renderFilter = this.getFilter();
 
     return (
@@ -62,6 +66,10 @@ export class App extends Component {
           <ContactForm addContact={this.addContact} />
           <div>
             <Filter value={filter} filterChange={this.handleFilterChange} />
+            <Title>Contacts</Title>
+            {contacts.length === 0 && (
+              <Text>The phonebook is empty. Please add a contact.</Text>
+            )}
             <ContactsList
               contacts={renderFilter}
               onDeleteContact={this.deleteContact}
